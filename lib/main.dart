@@ -13,7 +13,7 @@ void main() {
             create: (context) => CalculatorCubit(),
           ),
         ],
-        child: HomeScreen(),
+        child: const HomeScreen(),
       ),
     ),
   );

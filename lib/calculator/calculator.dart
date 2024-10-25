@@ -10,7 +10,6 @@ class Calculator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CalculatorCubit cubit = context.read<CalculatorCubit>();
-
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Card(
@@ -19,37 +18,42 @@ class Calculator extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              BlocBuilder<CalculatorCubit, int>(
-                builder: (context, state) {
-                  return TextField(
-                    keyboardType: const TextInputType.numberWithOptions(),
-                    decoration: InputDecoration(
-                      labelText: Strings.startMoney,
-                    ),
-                  );
+              TextField(
+                keyboardType: const TextInputType.numberWithOptions(),
+                onChanged: (String value) {
+                  cubit.startMoneySet(int.tryParse(value));
                 },
+                decoration: const InputDecoration(
+                  labelText: Strings.startMoney,
+                ),
               ),
               const SizedBox(
                 height: 24,
               ),
-              const Row(
+              Row(
                 children: <Widget>[
                   Expanded(
                     child: TextField(
                       keyboardType: TextInputType.numberWithOptions(),
-                      decoration: InputDecoration(
+                      onChanged: (String value) {
+                        cubit.percentageSet(double.tryParse(value));
+                      },
+                      decoration: const InputDecoration(
                         labelText: Strings.percentage,
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 32,
                   ),
                   Expanded(
                     child: TextField(
                       keyboardType:
-                          TextInputType.numberWithOptions(signed: true),
-                      decoration: InputDecoration(
+                      const TextInputType.numberWithOptions(signed: true),
+                      onChanged: (String value) {
+                        cubit.yearsCountSet(int.tryParse(value));
+                      },
+                      decoration: const InputDecoration(
                         labelText: Strings.yearsCount,
                       ),
                     ),
@@ -59,16 +63,23 @@ class Calculator extends StatelessWidget {
               const SizedBox(
                 height: 24,
               ),
-              const Align(
-                  alignment: Alignment.centerLeft, child: Text("Result is: ")),
+              BlocBuilder<CalculatorCubit, CalculatorState>(
+                builder: (context, state) {
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Result is: ${cubit.state.result}"),
+                  );
+                },
+              ),
               const SizedBox(
                 height: 24,
               ),
               FilledButton(
-                  onPressed: () {
-                    cubit.increment(1999);
-                  },
-                  child: const Text(Strings.calculatorAction))
+                onPressed: () {
+                  context.read<CalculatorCubit>().calculateClick();
+                },
+                child: const Text(Strings.calculatorAction),
+              )
             ],
           ),
         ),
