@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rich_calculator/calculator/bloc/calculator_cubit.dart';
 
+import '../strings/strings.dart';
+
 class Calculator extends StatelessWidget {
   const Calculator({super.key});
 
@@ -22,7 +24,7 @@ class Calculator extends StatelessWidget {
                   return TextField(
                     keyboardType: const TextInputType.numberWithOptions(),
                     decoration: InputDecoration(
-                      labelText: 'Start money $state',
+                      labelText: Strings.startMoney,
                     ),
                   );
                 },
@@ -36,7 +38,7 @@ class Calculator extends StatelessWidget {
                     child: TextField(
                       keyboardType: TextInputType.numberWithOptions(),
                       decoration: InputDecoration(
-                        labelText: 'Percent',
+                        labelText: Strings.percentage,
                       ),
                     ),
                   ),
@@ -48,7 +50,7 @@ class Calculator extends StatelessWidget {
                       keyboardType:
                           TextInputType.numberWithOptions(signed: true),
                       decoration: InputDecoration(
-                        labelText: 'Years count',
+                        labelText: Strings.yearsCount,
                       ),
                     ),
                   )
@@ -66,7 +68,7 @@ class Calculator extends StatelessWidget {
                   onPressed: () {
                     cubit.increment(1999);
                   },
-                  child: const Text("Make me RICH!"))
+                  child: const Text(Strings.calculatorAction))
             ],
           ),
         ),
