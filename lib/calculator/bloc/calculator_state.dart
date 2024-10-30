@@ -1,13 +1,13 @@
 part of 'calculator_cubit.dart';
 
 class CalculatorState {
-  int startMoney = 10;
+  double startMoney = 10;
   int yearsCount = 10;
   double percentage = 10.0;
 
   int result = 0;
 
-  CalculatorState copyWith({final int? startMoney,
+  CalculatorState copyWith({final double? startMoney,
     final int? yearsCount,
     final double? percentage,
     final int? result}) {
