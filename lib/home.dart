@@ -13,8 +13,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Container(
         color: Colors.amber,
-        child: const Center(
-            child: Calculator()),
+        child: Calculator(),
       ),
     );
   }
