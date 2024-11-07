@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rich_calculator/calculator/bloc/calculator_cubit.dart';
+import 'package:rich_calculator/calculator/replenishments_widget.dart';
 import 'package:rich_calculator/calculator/result_card.dart';
 
 import '../strings/strings.dart';
 import '../utils/log.dart';
 
-class Calculator extends StatelessWidget {
+class Calculator extends StatefulWidget {
   const Calculator({super.key});
 
+  @override
+  State<Calculator> createState() => _CalculatorState();
+}
+
+class _CalculatorState extends State<Calculator> {
   @override
   Widget build(BuildContext context) {
     CalculatorCubit cubit = context.read<CalculatorCubit>();
@@ -80,6 +86,35 @@ class Calculator extends StatelessWidget {
                     SizedBox(
                       height: 24,
                     ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          Text("${Strings.replenishments}"),
+                          BlocBuilder<CalculatorCubit, CalculatorState>(
+                            builder: (context, state) {
+                              return Switch(
+                                value: state.isWithReplenishments,
+                                onChanged: (bool newValue) {
+                                  cubit.onWithReplenishmentsChanged(newValue);
+                                },
+                              );
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    BlocBuilder<CalculatorCubit, CalculatorState>(
+                      builder: (context, state) {
+                        if (state.isWithReplenishments) {
+                          return PeriodicReplenishmentsWidget();
+                        }
+                        return SizedBox.shrink();
+                      },
+                    ),
                     SizedBox(
                       height: 24,
                     ),
@@ -88,7 +123,7 @@ class Calculator extends StatelessWidget {
                         context.read<CalculatorCubit>().calculateClick();
                       },
                       child: Text(Strings.calculatorAction),
-                    )
+                    ),
                   ],
                 ),
               ),
