@@ -1,4 +1,7 @@
 final class Strings {
+
+  static const String appTitle = "Rich calcualtor";
+
   static const String startMoney = "Start money";
   static const String percentage = "Percentage";
   static const String yearsCount = "Years count";
@@ -10,6 +13,6 @@ final class Strings {
 
   static const String replenishments = "Replenishments";
   static const String replenishmentCount = "Replenishment count";
-  static const String replenishmentIndexation = "Replenishment indexation";
+  static const String replenishmentIndexation = "indexation";
 
 }

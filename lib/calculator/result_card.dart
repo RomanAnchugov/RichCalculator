@@ -18,11 +18,11 @@ class CalculationResultCardWidget extends StatelessWidget {
         Log.i("build blyat: ${state.result}");
         return Card(
           child: () {
-            if (state.result > 0) {
+            if ((state.result?.sum ?? 0) > 0) {
               return Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Text(
-                  "Result is: ${numberFormatter.format(cubit.state.result)}",
+                  "Result is: ${numberFormatter.format(cubit.state.result!.sum)}",
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 18),
                 ),

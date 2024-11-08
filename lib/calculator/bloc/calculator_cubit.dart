@@ -38,10 +38,6 @@ class CalculatorCubit extends Cubit<CalculatorState> {
     emit(state.copyWith(isWithReplenishments: newValue));
   }
 
-  void onReplenishmentPeriodChange(ReplenishmentPeriod period) {
-    emit(state.copyWith(period: period));
-  }
-
   void onReplenishmentCountChange(String count) {
     var nonFormated = count.replaceAll(",", "");
     double? result = double.tryParse(nonFormated);
@@ -53,42 +49,19 @@ class CalculatorCubit extends Cubit<CalculatorState> {
   }
 
   void calculateClick() {
-    double? result = 0;
+    double? result = state.startMoney;
     double yearlyPercent = 1 + state.percentage / 100;
+    double monthPercent = 1 + (state.percentage / 1200);
+    double currentRepl = state.replenishmentCount;
 
     if (state.isWithReplenishments) {
-      switch (state.period) {
-        case ReplenishmentPeriod.day:
-          double dailyPercents = (1 + state.percentage / (100 * 365));
-          result =
-              (state.startMoney + state.replenishmentCount) * dailyPercents;
-          double currentRepl = state.replenishmentCount;
-          for (int j = 1; j < state.yearsCount; j++) {
-            for (int i = 1; i <= 365; i++) {
-              result = (result! + currentRepl) * dailyPercents;
-            }
-            currentRepl *= yearlyPercent;
-          }
-        case ReplenishmentPeriod.month:
-          double monthlyPercents = (1 + state.percentage / (100 * 12));
-          result =
-              (state.startMoney + state.replenishmentCount) * monthlyPercents;
-          double currentRepl = state.replenishmentCount;
-          for (int j = 1; j < state.yearsCount; j++) {
-            for (int i = 1; i <= 12; i++) {
-              result = (result! + currentRepl) * monthlyPercents;
-            }
-            currentRepl *= yearlyPercent;
-          }
-        case ReplenishmentPeriod.year:
-          double yearlyPercents = (1 + state.percentage / 100);
-          result =
-              (state.startMoney + state.replenishmentCount) * yearlyPercents;
-          double currentRepl = state.replenishmentCount;
-          for (int i = 1; i < state.yearsCount; i++) {
-            result = (result! + currentRepl) * yearlyPercents;
-            currentRepl *= yearlyPercent;
-          }
+      for (int i = 1; i <= state.yearsCount; i++) {
+        for (int j = 1; j <= 12; j++) {
+          result = (result! + currentRepl) * monthPercent;
+        }
+        if (state.isWithReplIndexation) {
+          currentRepl *= yearlyPercent;
+        }
       }
     } else {
       result = state.startMoney *
@@ -96,8 +69,8 @@ class CalculatorCubit extends Cubit<CalculatorState> {
     }
 
     Log.i(
-        "${state.startMoney} ${state.percentage} ${state.yearsCount} ${state.period.name} ${state.replenishmentCount} ${result.toString()}");
+        "${state.startMoney} ${state.percentage} ${state.yearsCount} ${state.replenishmentCount} ${result.toString()}");
 
-    emit(state.copyWith(result: result));
+    emit(state.updateResult(sum: result));
   }
 }

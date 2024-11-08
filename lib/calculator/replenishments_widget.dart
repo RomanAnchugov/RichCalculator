@@ -29,30 +29,6 @@ class _PeriodicReplenishmentsWidgetState
 
     return Column(
       children: [
-        BlocBuilder<CalculatorCubit, CalculatorState>(
-          builder: (context, state) {
-            return SegmentedButton<ReplenishmentPeriod>(
-              segments: <ButtonSegment<ReplenishmentPeriod>>[
-                ButtonSegment<ReplenishmentPeriod>(
-                  value: ReplenishmentPeriod.day,
-                  label: Text(ReplenishmentPeriod.day.name),
-                ),
-                ButtonSegment<ReplenishmentPeriod>(
-                  value: ReplenishmentPeriod.month,
-                  label: Text(ReplenishmentPeriod.month.name),
-                ),
-                ButtonSegment<ReplenishmentPeriod>(
-                  value: ReplenishmentPeriod.year,
-                  label: Text(ReplenishmentPeriod.year.name),
-                ),
-              ],
-              selected: {state.period},
-              onSelectionChanged: (Set<ReplenishmentPeriod> newSelection) {
-                cubit.onReplenishmentPeriodChange(newSelection.first);
-              },
-            );
-          },
-        ),
         TextField(
           keyboardType: TextInputType.numberWithOptions(signed: true),
           inputFormatters: [ThousandsFormatter(allowFraction: true)],
