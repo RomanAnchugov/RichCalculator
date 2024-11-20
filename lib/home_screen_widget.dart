@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rich_calculator/strings/strings.dart';
 
-import 'calculator/calculator.dart';
+import 'calculator/widgets/calculator_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Colors.amber,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Calculator(),
       ),
     );

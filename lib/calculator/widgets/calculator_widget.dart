@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rich_calculator/calculator/bloc/calculator_cubit.dart';
-import 'package:rich_calculator/calculator/replenishments_widget.dart';
-import 'package:rich_calculator/calculator/result_card.dart';
+import 'package:rich_calculator/calculator/widgets/replenishments_widget.dart';
+import 'package:rich_calculator/calculator/widgets/result_card_widget.dart';
 
-import '../strings/strings.dart';
-import '../utils/log.dart';
+import '../../strings/strings.dart';
+import '../../utils/log.dart';
 
 class Calculator extends StatefulWidget {
   const Calculator({super.key});
@@ -28,23 +28,24 @@ class _CalculatorState extends State<Calculator> {
           children: [
             Card(
               child: Padding(
-                padding: EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(24.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextField(
-                      keyboardType: TextInputType.numberWithOptions(),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: Strings.startMoney,
+                      ),
+                      keyboardType: const TextInputType.numberWithOptions(),
                       inputFormatters: [
                         ThousandsFormatter(allowFraction: true),
                       ],
                       onChanged: (String value) {
                         cubit.startMoneySet(value);
                       },
-                      decoration: InputDecoration(
-                        labelText: Strings.startMoney,
-                      ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 24,
                     ),
                     Row(
@@ -86,35 +87,7 @@ class _CalculatorState extends State<Calculator> {
                     SizedBox(
                       height: 24,
                     ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          Text("${Strings.replenishments}"),
-                          BlocBuilder<CalculatorCubit, CalculatorState>(
-                            builder: (context, state) {
-                              return Switch(
-                                value: state.isWithReplenishments,
-                                onChanged: (bool newValue) {
-                                  cubit.onWithReplenishmentsChanged(newValue);
-                                },
-                              );
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    BlocBuilder<CalculatorCubit, CalculatorState>(
-                      builder: (context, state) {
-                        if (state.isWithReplenishments) {
-                          return PeriodicReplenishmentsWidget();
-                        }
-                        return SizedBox.shrink();
-                      },
-                    ),
+                    PeriodicReplenishmentsWidget(),
                     SizedBox(
                       height: 24,
                     ),
@@ -128,7 +101,14 @@ class _CalculatorState extends State<Calculator> {
                 ),
               ),
             ),
-            CalculationResultCardWidget(),
+            BlocBuilder<CalculatorCubit, CalculatorState>(
+              builder: (context, state) {
+                if (state.result != null) {
+                  return CalculationResultCardWidget();
+                }
+                return SizedBox.shrink();
+              },
+            ),
           ],
         ),
       ),

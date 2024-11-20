@@ -5,10 +5,7 @@ class CalculatorState {
   int yearsCount = 0;
   double percentage = 0.0;
 
-  bool isWithReplenishments = false;
   double replenishmentCount = 0.0;
-
-  bool isWithReplIndexation = false;
 
   ResultState? result = ResultState();
 
@@ -17,23 +14,14 @@ class CalculatorState {
       final int? yearsCount,
       final double? percentage,
       final ResultState? result,
-      final bool? isWithReplenishments,
-      final double? replenishmentCount,
-      final bool? isWithReplIndexation}) {
+      final double? replenishmentCount}) {
     return CalculatorState(
       startMoney: startMoney ?? this.startMoney,
       yearsCount: yearsCount ?? this.yearsCount,
       percentage: percentage ?? this.percentage,
       result: result ?? this.result,
-      isWithReplenishments: isWithReplenishments ?? this.isWithReplenishments,
       replenishmentCount: replenishmentCount ?? this.replenishmentCount,
-      isWithReplIndexation: isWithReplIndexation ?? this.isWithReplIndexation,
     );
-  }
-
-  CalculatorState updateResult({final double? sum}) {
-    return copyWith(
-        result: result?.copyWith(sum: sum) ?? ResultState(sum: sum ?? 0.0));
   }
 
   CalculatorState(
@@ -41,18 +29,46 @@ class CalculatorState {
       this.yearsCount = 0,
       this.percentage = 0,
       this.result,
-      this.isWithReplenishments = false,
-      this.replenishmentCount = 0,
-      this.isWithReplIndexation = false});
+      this.replenishmentCount = 0});
 }
 
 class ResultState {
   double sum = 0.0;
+  double lastReplenishment = 0.0;
+  List<double>? linearReplenishmentsArr = [];
+  List<double>? compoundReplenishmentsArr = [];
 
-  ResultState copyWith({final double? sum}) {
-    Log.i("copyWith(): from ${this.sum} to ${sum}");
-    return ResultState(sum: sum ?? this.sum);
+  ResultState copyWith({
+    final double? sum,
+    final double? lastReplenishment,
+    final List<double>? linearReplenishmentsArr,
+    final List<double>? compoundReplenishmentsArr,
+  }) {
+    return ResultState(
+      sum: sum ?? this.sum,
+      lastReplenishment: lastReplenishment ?? this.lastReplenishment,
+      linearReplenishmentsArr:
+          linearReplenishmentsArr ?? this.linearReplenishmentsArr,
+      compoundReplenishmentsArr:
+          compoundReplenishmentsArr ?? this.compoundReplenishmentsArr,
+    );
   }
 
-  ResultState({this.sum = 0.0});
+  List<FlSpot> getCompoundLineSpots() {
+    List<FlSpot> result = [];
+
+    for (int i = 0; i < (compoundReplenishmentsArr?.length ?? 0); i++) {
+      result.add(FlSpot(i.toDouble(),
+          double.parse(compoundReplenishmentsArr![i].toStringAsFixed(1))));
+    }
+
+    return result;
+  }
+
+  ResultState({
+    this.sum = 0.0,
+    this.lastReplenishment = 0.0,
+    this.linearReplenishmentsArr,
+    this.compoundReplenishmentsArr,
+  });
 }
