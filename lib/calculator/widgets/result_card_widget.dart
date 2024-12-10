@@ -16,8 +16,8 @@ class CalculationResultCardWidget extends StatelessWidget {
 
     return BlocBuilder<CalculatorCubit, CalculatorState>(
       builder: (context, state) {
-        Log.i("build blyat: ${state.result}");
         return Card(
+          clipBehavior: Clip.hardEdge,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
             child: Column(
@@ -62,6 +62,7 @@ class CalculationResultCardWidget extends StatelessWidget {
                         )
                       ],
                     ),
+                    duration: Duration(milliseconds: 300),
                   ),
                 )
               ],

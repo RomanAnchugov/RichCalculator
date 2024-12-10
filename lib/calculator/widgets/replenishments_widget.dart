@@ -26,12 +26,12 @@ class _PeriodicReplenishmentsWidgetState
     CalculatorCubit cubit = context.read<CalculatorCubit>();
 
     return TextField(
-      keyboardType: TextInputType.numberWithOptions(signed: true),
+      keyboardType: const TextInputType.numberWithOptions(signed: true),
       inputFormatters: [ThousandsFormatter(allowFraction: true)],
       onChanged: (String value) {
         cubit.onReplenishmentCountChange(value);
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: Strings.replenishmentCount,
       ),
     );

@@ -16,6 +16,8 @@ class Calculator extends StatefulWidget {
 }
 
 class _CalculatorState extends State<Calculator> {
+  final scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     CalculatorCubit cubit = context.read<CalculatorCubit>();
@@ -25,6 +27,7 @@ class _CalculatorState extends State<Calculator> {
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
         child: ListView(
           shrinkWrap: true,
+          controller: scrollController,
           children: [
             Card(
               child: Padding(
@@ -33,7 +36,7 @@ class _CalculatorState extends State<Calculator> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: Strings.startMoney,
                       ),
@@ -55,47 +58,48 @@ class _CalculatorState extends State<Calculator> {
                             inputFormatters: [
                               ThousandsFormatter(allowFraction: true)
                             ],
-                            keyboardType: TextInputType.numberWithOptions(),
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
                             onChanged: (String value) {
                               cubit.percentageSet(value);
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: Strings.percentage,
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 32,
                         ),
                         Expanded(
                           child: TextField(
-                            keyboardType:
-                                TextInputType.numberWithOptions(signed: true),
+                            keyboardType: const TextInputType.numberWithOptions(
+                                signed: true),
                             inputFormatters: [
                               ThousandsFormatter(allowFraction: true)
                             ],
                             onChanged: (String value) {
                               cubit.yearsCountSet(value);
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: Strings.yearsCount,
                             ),
                           ),
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 24,
                     ),
-                    PeriodicReplenishmentsWidget(),
-                    SizedBox(
+                    const PeriodicReplenishmentsWidget(),
+                    const SizedBox(
                       height: 24,
                     ),
                     FilledButton(
                       onPressed: () {
                         context.read<CalculatorCubit>().calculateClick();
                       },
-                      child: Text(Strings.calculatorAction),
+                      child: const Text(Strings.calculatorAction),
                     ),
                   ],
                 ),
@@ -103,10 +107,18 @@ class _CalculatorState extends State<Calculator> {
             ),
             BlocBuilder<CalculatorCubit, CalculatorState>(
               builder: (context, state) {
-                if (state.result != null) {
-                  return CalculationResultCardWidget();
-                }
-                return SizedBox.shrink();
+                return AnimatedOpacity(
+                  opacity: state.result != null ? 1 : 0,
+                  duration: Duration(milliseconds: 300),
+                  onEnd: () => {
+                    scrollController.animateTo(
+                      scrollController.position.maxScrollExtent,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    )
+                  },
+                  child: CalculationResultCardWidget(),
+                );
               },
             ),
           ],
